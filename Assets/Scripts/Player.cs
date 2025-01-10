@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Ambulance ambulance; 
+    public Ambulance ambulance;
     private float speed = 5f;
-    private float ambulanceDistance = 0f;  
+    private float ambulanceDistance = 0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -23,15 +23,24 @@ public class Player : MonoBehaviour
         Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
         float angle = Mathf.Atan2(mouseWorldPosition.y - transform.position.y, mouseWorldPosition.x - transform.position.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
-        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
 
-        if (Input.GetKeyDown(KeyCode.E) && ambulanceDistance < 2 && !ambulance.entered)
+
+        ambulanceDistance = (transform.position - ambulance.transform.position).magnitude;
+        if (ambulance.entered)
+            Camera.main.transform.position = new Vector3(ambulance.transform.position.x, ambulance.transform.position.y, Camera.main.transform.position.z);
+        else
+            Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
+
+        if (Input.GetKeyDown(KeyCode.E) && ambulanceDistance < 3f && !ambulance.entered)
         {
             ambulance.entered = true;
         }
-        else if (Input.GetKeyDown(KeyCode.E) && ambulance.entered) ambulance.entered = false;
-
-        if(ambulance.entered)
+        else if (Input.GetKeyDown(KeyCode.E) && ambulance.entered)
+        {
+            ambulance.entered = false;
+            transform.position = ambulance.transform.position + -ambulance.transform.right * 2;
+        }
+        if (ambulance.entered)
         {
             transform.localScale = new Vector3(0, 0, 0);
             transform.position = ambulance.transform.position;
@@ -50,7 +59,7 @@ public class Player : MonoBehaviour
             transform.position -= new Vector3(0, 1, 0) * (speed * Time.deltaTime);
         if (Input.GetKey(KeyCode.D))
             transform.position += new Vector3(1, 0, 0) * (speed * Time.deltaTime);
-        if (Input.GetKey(KeyCode.LeftShift)) 
+        if (Input.GetKey(KeyCode.LeftShift))
             speed = 7f;
         else
             speed = 5;

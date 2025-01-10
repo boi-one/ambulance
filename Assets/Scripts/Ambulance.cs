@@ -1,18 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
+
+public class Engine
+{
+    public float velocity = 0;
+    public float direction = 0;
+    private float increaseSteps = 5f;
+    public float maxVelocity = 20f;
+
+    public void UpdateVelocity()
+    {
+        Debug.Log(velocity);
+
+        if (direction != 0) 
+        {
+            velocity += direction * (increaseSteps * Time.deltaTime);
+        }
+        else if (velocity > 0) velocity -= increaseSteps * (1.5f * Time.deltaTime);
+        else if (velocity < 0) velocity += increaseSteps * (1.5f * Time.deltaTime);
+
+    }
+};
 
 public class Ambulance : MonoBehaviour
 {
     public bool entered;
-    private float speed = 15f;
 
+    Engine engine = new Engine();
     public Transform[] wheels;
     private float targetAngle = 0f;
-    private float targetAngleWheels = 0f;
-    private float rotationSpeed = 60f;
+    private float rotationSpeed = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -24,43 +40,35 @@ public class Ambulance : MonoBehaviour
     void Update()
     {
         if (!entered) return;
+        rotationSpeed = engine.velocity * 2f;
+        transform.position += transform.up * (engine.velocity * Time.deltaTime);
+        transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+        engine.UpdateVelocity();
 
         if (Input.GetKey(KeyCode.W))
-            transform.position += transform.up * (speed * Time.deltaTime);
-        if (Input.GetKey(KeyCode.S))
-            transform.position -= transform.up * (speed * Time.deltaTime);
+        {
+            engine.direction = 1;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            engine.direction = -1;
+        }
+        else engine.direction = 0;
 
-        transform.rotation = Quaternion.Euler(0, 0, targetAngle);
-        targetAngleWheels = targetAngle;
-        if (Input.GetKey(KeyCode.D))
-        {
-            if (Input.GetKey(KeyCode.W))
-                targetAngle -= (rotationSpeed * 3f) * Time.deltaTime;
-            else if (Input.GetKey(KeyCode.S))
-                targetAngle += (rotationSpeed * 3f) * Time.deltaTime;
-            if (targetAngleWheels >  -20 + targetAngle) targetAngleWheels -= rotationSpeed * Time.deltaTime;
-        }
-        else if (targetAngleWheels < targetAngle)
-        {
-            targetAngleWheels += rotationSpeed * Time.deltaTime;
-        }
+        if (Input.GetKey(KeyCode.A)) Rotate(-1);
+        if (Input.GetKey(KeyCode.D)) Rotate(1);
 
-        if (Input.GetKey(KeyCode.A))
-        {
-            if (Input.GetKey(KeyCode.W))
-                targetAngle += (rotationSpeed * 3f) * Time.deltaTime;
-            else if (Input.GetKey(KeyCode.S))
-                targetAngle -= (rotationSpeed * 3f) * Time.deltaTime;
-            if (targetAngleWheels < 20 + targetAngle) targetAngleWheels += rotationSpeed * Time.deltaTime;
-        }
-        else if (targetAngleWheels > targetAngle)
-        {
-            targetAngleWheels -= rotationSpeed * Time.deltaTime;
-        }
 
-        foreach (Transform wheel in wheels)
-        {
-            wheel.rotation = Quaternion.Euler(0, 0, targetAngleWheels);
-        }
+    }
+
+    void Rotate(float direction)
+    {
+        //if (engine.speed == 0) return;
+        if (engine.velocity < 0)
+            targetAngle += (-direction * rotationSpeed * 3f) * Time.deltaTime;
+        else if (engine.direction >= 0 || engine.velocity > 0)
+            targetAngle += (-direction * rotationSpeed * 3f) * Time.deltaTime;
+
+
     }
 }
