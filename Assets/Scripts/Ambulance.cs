@@ -6,17 +6,19 @@ public class Engine
     public float direction = 0;
     private float increaseSteps = 5f;
     public float maxVelocity = 20f;
+    public bool brake = false;
 
-    public void UpdateVelocity()
+    public void UpdateVelocity(bool brake)
     {
-        Debug.Log(velocity);
+        float decreaseSteps = increaseSteps * 1.5f;
+        if (brake) decreaseSteps = increaseSteps * 3f;
 
         if (direction != 0) 
         {
             velocity += direction * (increaseSteps * Time.deltaTime);
         }
-        else if (velocity > 0) velocity -= increaseSteps * (1.5f * Time.deltaTime);
-        else if (velocity < 0) velocity += increaseSteps * (1.5f * Time.deltaTime);
+        else if (velocity > 0) velocity -= decreaseSteps * (1.5f * Time.deltaTime);
+        else if (velocity < 0) velocity += decreaseSteps * (1.5f * Time.deltaTime);
 
     }
 };
@@ -39,11 +41,11 @@ public class Ambulance : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        engine.UpdateVelocity(engine.brake);
         if (!entered) return;
         rotationSpeed = engine.velocity * 2f;
         transform.position += transform.up * (engine.velocity * Time.deltaTime);
         transform.rotation = Quaternion.Euler(0, 0, targetAngle);
-        engine.UpdateVelocity();
 
         if (Input.GetKey(KeyCode.W))
         {
@@ -57,8 +59,8 @@ public class Ambulance : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A)) Rotate(-1);
         if (Input.GetKey(KeyCode.D)) Rotate(1);
-
-
+        if (Input.GetKeyDown(KeyCode.Space)) engine.brake = true;
+        if (Input.GetKeyUp(KeyCode.Space)) engine.brake = false;
     }
 
     void Rotate(float direction)
