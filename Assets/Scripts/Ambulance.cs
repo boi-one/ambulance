@@ -47,11 +47,11 @@ public class Ambulance : MonoBehaviour
         transform.position += transform.up * (engine.velocity * Time.deltaTime);
         transform.rotation = Quaternion.Euler(0, 0, targetAngle);
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) && !engine.brake)
         {
             engine.direction = 1;
         }
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S) && !engine.brake)
         {
             engine.direction = -1;
         }
@@ -65,11 +65,12 @@ public class Ambulance : MonoBehaviour
 
     void Rotate(float direction)
     {
-        //if (engine.speed == 0) return;
+        float turnSpeed = rotationSpeed;
+        if (engine.brake && engine.velocity > 5) turnSpeed *= 3;
         if (engine.velocity < 0)
-            targetAngle += (-direction * rotationSpeed * 3f) * Time.deltaTime;
+            targetAngle += (-direction * turnSpeed * 3f) * Time.deltaTime;
         else if (engine.direction >= 0 || engine.velocity > 0)
-            targetAngle += (-direction * rotationSpeed * 3f) * Time.deltaTime;
+            targetAngle += (-direction * turnSpeed * 3f) * Time.deltaTime;
 
 
     }
