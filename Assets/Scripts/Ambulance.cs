@@ -10,10 +10,12 @@ public class Engine
 
     public void UpdateVelocity(bool brake)
     {
+        Debug.Log(velocity);
+
         float decreaseSteps = increaseSteps * 1.5f;
         if (brake) decreaseSteps = increaseSteps * 3f;
 
-        if (direction != 0) 
+        if (direction != 0 && velocity < maxVelocity) 
         {
             velocity += direction * (increaseSteps * Time.deltaTime);
         }
