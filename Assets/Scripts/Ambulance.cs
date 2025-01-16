@@ -10,12 +10,12 @@ public class Engine
 
     public void UpdateVelocity(bool brake)
     {
-        Debug.Log(velocity);
+        Debug.Log("engine velocity " + velocity);
 
         float decreaseSteps = increaseSteps * 1.5f;
         if (brake) decreaseSteps = increaseSteps * 3f;
 
-        if (direction != 0 && velocity < maxVelocity) 
+        if (direction != 0 && velocity < maxVelocity)
         {
             velocity += direction * (increaseSteps * Time.deltaTime);
         }
@@ -45,7 +45,13 @@ public class Ambulance : MonoBehaviour
     {
         engine.UpdateVelocity(engine.brake);
         if (!entered) return;
-        rotationSpeed = engine.velocity * 2f;
+        if (engine.velocity < 10)
+            rotationSpeed = 160 / (10 / 3);
+        else if (engine.velocity > 0.1f)
+            rotationSpeed = 160 / (engine.velocity / 3);
+        else if (engine.velocity < 0.1f) rotationSpeed = 0;
+
+        //Debug.Log(rotationSpeed);
         transform.position += transform.up * (engine.velocity * Time.deltaTime);
         transform.rotation = Quaternion.Euler(0, 0, targetAngle);
 
@@ -68,7 +74,7 @@ public class Ambulance : MonoBehaviour
     void Rotate(float direction)
     {
         float turnSpeed = rotationSpeed;
-        if (engine.brake && engine.velocity > 5) turnSpeed *= 3;
+        if (engine.velocity < 0.1f && engine.velocity > -0.1f) return;
         if (engine.velocity < 0)
             targetAngle += (-direction * turnSpeed * 3f) * Time.deltaTime;
         else if (engine.direction >= 0 || engine.velocity > 0)
