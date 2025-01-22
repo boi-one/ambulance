@@ -6,7 +6,9 @@ public class RoadGeneration : MonoBehaviour
 {
     public Tile roadTile;
     public Tile sidewalkTile;
+    public Tile blockadeTile;
     public Tilemap roadMap;
+    public Tilemap collisionMap;
     public int streetAmount = 12;
     public int streetLength = 120;
     private Quaternion rotation = Quaternion.Euler(90, 90, 0);
@@ -16,14 +18,14 @@ public class RoadGeneration : MonoBehaviour
     {
 
         int stepSize = streetLength / streetAmount;
-        for (int i = 0; i < streetAmount + 1; i++) //horizontal
+        for (int i = 0; i < streetAmount; i++) //horizontal
         {
-            CreateRoadHorizontal(new Vector3Int(-20, i * stepSize - stepSize * 2), new Vector3Int(6, streetLength));
+            CreateRoadHorizontal(new Vector3Int(-20, -20 + i * stepSize - stepSize * 2), new Vector3Int(6, streetLength));
         }
 
-        for (int i = 0; i < streetAmount + 1; i++) //vertical
+        for (int i = 0; i < streetAmount; i++) //vertical
         {
-            CreateRoadVertical(new Vector3Int(i * stepSize - stepSize * 2, -20), new Vector3Int(6, streetLength));
+            CreateRoadVertical(new Vector3Int(-20 + i * stepSize - stepSize * 2, -20), new Vector3Int(6, streetLength));
         }
 
     }
@@ -39,6 +41,18 @@ public class RoadGeneration : MonoBehaviour
     /// </summary>
     /// <param name="start"></param>
     /// <param name="size">x: width y: height</param>
+
+    public void CheckAroundTile(Vector3Int position)
+    {
+        for (int i = position.x - 1; i < position.x + 2; i++)
+        {
+            for (int j = position.y - 1; j < position.y + 2; j++)
+            {
+                if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(i, j))) == null)
+                    roadMap.SetTile(new Vector3Int(i, j), blockadeTile);
+            }
+        }
+    }
     public void CreateRoadHorizontal(Vector3Int start, Vector3Int size)
     {
         Vector3Int tilePosition = start;
@@ -54,11 +68,14 @@ public class RoadGeneration : MonoBehaviour
 
                 if (roadMap.GetTile(roadMap.WorldToCell(tilePosition)) != roadTile)
                     roadMap.SetTile(tilePosition + new Vector3Int(0, j), tile);
+                else
+                {
+                    CheckAroundTile(tilePosition);
+                }
             }
             tilePosition += new Vector3Int(1, 0);
         }
     }
-
     public void CreateRoadVertical(Vector3Int start, Vector3Int size)
     {
         Vector3Int tilePosition = start;
@@ -74,7 +91,11 @@ public class RoadGeneration : MonoBehaviour
 
                 if (roadMap.GetTile(roadMap.WorldToCell(tilePosition)) != roadTile)
                     roadMap.SetTile(tilePosition + new Vector3Int(j, 0), tile);
-                //TODO: houses and at the end of the streets a blockade check if the roadTile is bordering an empty tile
+                else
+                {
+                    CheckAroundTile(tilePosition);
+                }
+                
             }
             tilePosition += new Vector3Int(0, 1);
         }

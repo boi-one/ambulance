@@ -1,3 +1,4 @@
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class Engine
@@ -10,8 +11,6 @@ public class Engine
 
     public void UpdateVelocity(bool brake)
     {
-        Debug.Log("engine velocity " + velocity);
-
         float decreaseSteps = increaseSteps * 1.5f;
         if (brake) decreaseSteps = increaseSteps * 3f;
 
@@ -25,6 +24,8 @@ public class Engine
     }
 };
 
+//TODO: remake this with the unity velocity, city generation
+
 public class Ambulance : MonoBehaviour
 {
     public bool entered;
@@ -33,11 +34,12 @@ public class Ambulance : MonoBehaviour
     public Transform[] wheels;
     private float targetAngle = 0f;
     private float rotationSpeed = 0f;
+    Rigidbody2D rb;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -51,9 +53,12 @@ public class Ambulance : MonoBehaviour
             rotationSpeed = 160 / (engine.velocity / 3);
         else if (engine.velocity < 0.1f) rotationSpeed = 0;
 
-        //Debug.Log(rotationSpeed);
-        transform.position += transform.up * (engine.velocity * Time.deltaTime);
-        transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+        rb.velocity = new Vector3(0, engine.velocity) * 1;
+
+        Debug.Log(rb.velocity);
+
+        //transform.position += transform.up * (engine.velocity * Time.deltaTime);
+        //transform.rotation = Quaternion.Euler(0, 0, targetAngle);
 
         if (Input.GetKey(KeyCode.W) && !engine.brake)
         {
@@ -74,12 +79,14 @@ public class Ambulance : MonoBehaviour
     void Rotate(float direction)
     {
         float turnSpeed = rotationSpeed;
-        if (engine.velocity < 0.1f && engine.velocity > -0.1f) return;
-        if (engine.velocity < 0)
+        if (rb.velocity.magnitude < 0.1f) return;
+        if (Vector3.Dot(rb.velocity, transform.up) < 0)
+        {
             targetAngle += (-direction * turnSpeed * 3f) * Time.deltaTime;
-        else if (engine.direction >= 0 || engine.velocity > 0)
+        }
+        else if (engine.direction >= 0 || Vector3.Dot(rb.velocity, transform.up) > 0)
+        {
             targetAngle += (-direction * turnSpeed * 3f) * Time.deltaTime;
-
-
+        }
     }
 }
