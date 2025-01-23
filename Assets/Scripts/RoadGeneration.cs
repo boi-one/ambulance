@@ -7,11 +7,13 @@ public class RoadGeneration : MonoBehaviour
     public Tile roadTile;
     public Tile sidewalkTile;
     public Tile blockadeTile;
+    public Tile houseTile;
     public Tilemap roadMap;
     public Tilemap collisionMap;
     public int streetAmount = 12;
     public int streetLength = 120;
     private Quaternion rotation = Quaternion.Euler(90, 90, 0);
+    private List<Tile> allTiles = new List<Tile>();
 
     // Start is called before the first frame update
     void Start()
@@ -48,8 +50,10 @@ public class RoadGeneration : MonoBehaviour
         {
             for (int j = position.y - 1; j < position.y + 2; j++)
             {
-                if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(i, j))) == null)
-                    roadMap.SetTile(new Vector3Int(i, j), blockadeTile);
+                //if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(i, j))) == null)
+                //    collisionMap.SetTile(new Vector3Int(i, j), blockadeTile);
+                //if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(i, j))) == sidewalkTile | houseTile)
+                //    collisionMap.SetTile(new Vector3Int(i, j), houseTile);
             }
         }
     }
@@ -90,7 +94,9 @@ public class RoadGeneration : MonoBehaviour
                     tile = roadTile;
 
                 if (roadMap.GetTile(roadMap.WorldToCell(tilePosition)) != roadTile)
+                {
                     roadMap.SetTile(tilePosition + new Vector3Int(j, 0), tile);
+                }
                 else
                 {
                     CheckAroundTile(tilePosition);

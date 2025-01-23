@@ -1,5 +1,6 @@
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Engine
 {
@@ -45,20 +46,16 @@ public class Ambulance : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        engine.UpdateVelocity(engine.brake);
         if (!entered) return;
+        engine.UpdateVelocity(engine.brake);
         if (engine.velocity < 10)
             rotationSpeed = 160 / (10 / 3);
         else if (engine.velocity > 0.1f)
             rotationSpeed = 160 / (engine.velocity / 3);
         else if (engine.velocity < 0.1f) rotationSpeed = 0;
 
-        rb.velocity = new Vector3(0, engine.velocity) * 1;
-
-        Debug.Log(rb.velocity);
-
-        //transform.position += transform.up * (engine.velocity * Time.deltaTime);
-        //transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+        rb.velocity = transform.up * engine.velocity;
+        transform.rotation = Quaternion.Euler(0, 0, targetAngle);
 
         if (Input.GetKey(KeyCode.W) && !engine.brake)
         {
@@ -73,7 +70,7 @@ public class Ambulance : MonoBehaviour
         if (Input.GetKey(KeyCode.A)) Rotate(-1);
         if (Input.GetKey(KeyCode.D)) Rotate(1);
         if (Input.GetKeyDown(KeyCode.Space)) engine.brake = true;
-        if (Input.GetKeyUp(KeyCode.Space)) engine.brake = false;
+        else if (Input.GetKeyUp(KeyCode.Space)) engine.brake = false;
     }
 
     void Rotate(float direction)
@@ -88,5 +85,12 @@ public class Ambulance : MonoBehaviour
         {
             targetAngle += (-direction * turnSpeed * 3f) * Time.deltaTime;
         }
+        else Debug.Log("none");
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!collision.gameObject.TryGetComponent<TilemapCollider2D>(out TilemapCollider2D tilemap)) return;
+        engine.velocity = 0;
     }
 }

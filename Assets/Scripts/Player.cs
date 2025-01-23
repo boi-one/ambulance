@@ -6,12 +6,21 @@ public class Player : MonoBehaviour
 {
     public Ambulance ambulance;
     private float speed = 5f;
+    private Vector3 direction;
     private float ambulanceDistance = 0f;
+    private Rigidbody2D rb;
+    Dictionary<KeyCode, Vector3> directions = new Dictionary<KeyCode, Vector3>()
+    {
+        {KeyCode.W, new Vector3( 0,  1) },
+        {KeyCode.A, new Vector3(-1,  0) },
+        {KeyCode.S, new Vector3( 0, -1) },
+        {KeyCode.D, new Vector3( 1,  0) },
+    };
 
     // Start is called before the first frame update
     void Start()
     {
-
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -51,17 +60,12 @@ public class Player : MonoBehaviour
 
     void Movement()
     {
-        if (Input.GetKey(KeyCode.W))
-            transform.position += new Vector3(0, 1, 0) * (speed * Time.deltaTime);
-        if (Input.GetKey(KeyCode.A))
-            transform.position -= new Vector3(1, 0, 0) * (speed * Time.deltaTime);
-        if (Input.GetKey(KeyCode.S))
-            transform.position -= new Vector3(0, 1, 0) * (speed * Time.deltaTime);
-        if (Input.GetKey(KeyCode.D))
-            transform.position += new Vector3(1, 0, 0) * (speed * Time.deltaTime);
-        if (Input.GetKey(KeyCode.LeftShift))
-            speed = 7f;
-        else
-            speed = 5;
+        foreach(KeyValuePair<KeyCode, Vector3> pair in directions)
+        {
+            if (Input.GetKeyDown(pair.Key)) direction += pair.Value;
+            else if(Input.GetKeyUp(pair.Key)) direction -= pair.Value;
+
+            rb.velocity = direction * speed;
+        }
     }
 }
