@@ -29,6 +29,21 @@ public class RoadGeneration : MonoBehaviour
         {
             CreateRoadVertical(new Vector3Int(i * stepSize, 0), new Vector3Int(6, streetLength));
         }
+
+        for(int x = 0; x < streetLength; x++)
+        {
+            for(int y = 0; y < streetLength; y++)
+            {
+                if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(x, y))) == roadTile)
+                    CheckAroundTile3(new Vector3Int(x, y), blockadeTile);
+            }
+        }
+        for(int x = 0; x < streetLength; x++)
+        {
+            for(int y = 0; y < streetLength; y++)
+                if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(x, y))) == sidewalkTile)
+                    CheckAroundTile1(new Vector3Int(x, y), houseTile);
+        }
     }
 
     // Update is called once per frame
@@ -43,19 +58,34 @@ public class RoadGeneration : MonoBehaviour
     /// <param name="start"></param>
     /// <param name="size">x: width y: height</param>
 
-    public void CheckAroundTile(Vector3Int position)
+    public void CheckAroundTile3(Vector3Int position, Tile tile)
     {
         for (int i = position.x - 1; i < position.x + 2; i++)
         {
             for (int j = position.y - 1; j < position.y + 2; j++)
             {
                 if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(i, j))) == null)
-                    collisionMap.SetTile(new Vector3Int(i, j), blockadeTile);
-                //if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(i, j))) == sidewalkTile | houseTile)
-                //    collisionMap.SetTile(new Vector3Int(i, j), houseTile);
+                    collisionMap.SetTile(new Vector3Int(i, j), tile);
             }
         }
     }
+    public void CheckAroundTile1(Vector3Int position, Tile tile)
+    {
+        Vector3Int[] positions =
+        {
+            new Vector3Int(position.x - 1, position.y),
+            new Vector3Int(position.x + 1, position.y),
+            new Vector3Int(position.x, position.y -1),
+            new Vector3Int(position.x, position.y + 1),
+        };
+
+        for (int i = 0; i < positions.Length; i++)
+        {
+            if (roadMap.GetTile(roadMap.WorldToCell(positions[i])) == null)
+                collisionMap.SetTile(positions[i], tile);
+        }
+    }
+
     public void CreateRoadHorizontal(Vector3Int start, Vector3Int size)
     {
         Vector3Int tilePosition = start;
@@ -71,10 +101,6 @@ public class RoadGeneration : MonoBehaviour
 
                 if (roadMap.GetTile(roadMap.WorldToCell(tilePosition)) != roadTile)
                     roadMap.SetTile(tilePosition + new Vector3Int(0, j), tile);
-                else
-                {
-                    CheckAroundTile(tilePosition);
-                }
             }
             tilePosition += new Vector3Int(1, 0);
         }

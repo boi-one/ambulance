@@ -10,10 +10,16 @@ public class Engine
     public float maxVelocity = 20f;
     public bool brake = false;
 
-    public void UpdateVelocity(bool brake)
+    public void UpdateVelocity(bool brake, bool entered)
     {
         float decreaseSteps = increaseSteps * 1.5f;
         if (brake) decreaseSteps = increaseSteps * 3f;
+
+        if(!entered)
+        {
+            if (velocity > 0) velocity -= decreaseSteps * (1.5f * Time.deltaTime);
+            else if (velocity < 0) velocity += decreaseSteps * (1.5f * Time.deltaTime);
+        }
 
         if (direction != 0 && velocity < maxVelocity)
         {
@@ -46,8 +52,7 @@ public class Ambulance : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!entered) return;
-        engine.UpdateVelocity(engine.brake);
+        engine.UpdateVelocity(engine.brake, entered);
         if (engine.velocity < 10)
             rotationSpeed = 160 / (10 / 3);
         else if (engine.velocity > 0.1f)
@@ -57,6 +62,7 @@ public class Ambulance : MonoBehaviour
         rb.velocity = transform.up * engine.velocity;
         transform.rotation = Quaternion.Euler(0, 0, targetAngle);
 
+        if (!entered) return;
         if (Input.GetKey(KeyCode.W) && !engine.brake)
         {
             engine.direction = 1;
