@@ -79,7 +79,7 @@ public class Ambulance : MonoBehaviour
         if (rb.velocity.magnitude < 0.1f) return;
         if (Vector3.Dot(rb.velocity, transform.up) < 0)
         {
-            targetAngle += (-direction * turnSpeed * 3f) * Time.deltaTime;
+            targetAngle += (direction * turnSpeed * 3f) * Time.deltaTime;
         }
         else if (engine.direction >= 0 || Vector3.Dot(rb.velocity, transform.up) > 0)
         {

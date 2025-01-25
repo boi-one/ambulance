@@ -22,14 +22,13 @@ public class RoadGeneration : MonoBehaviour
         int stepSize = streetLength / streetAmount;
         for (int i = 0; i < streetAmount; i++) //horizontal
         {
-            CreateRoadHorizontal(new Vector3Int(-20, -20 + i * stepSize - stepSize * 2), new Vector3Int(6, streetLength));
+            CreateRoadHorizontal(new Vector3Int(0, i * stepSize), new Vector3Int(6, streetLength));
         }
 
         for (int i = 0; i < streetAmount; i++) //vertical
         {
-            CreateRoadVertical(new Vector3Int(-20 + i * stepSize - stepSize * 2, -20), new Vector3Int(6, streetLength));
+            CreateRoadVertical(new Vector3Int(i * stepSize, 0), new Vector3Int(6, streetLength));
         }
-
     }
 
     // Update is called once per frame
@@ -50,8 +49,8 @@ public class RoadGeneration : MonoBehaviour
         {
             for (int j = position.y - 1; j < position.y + 2; j++)
             {
-                //if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(i, j))) == null)
-                //    collisionMap.SetTile(new Vector3Int(i, j), blockadeTile);
+                if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(i, j))) == null)
+                    collisionMap.SetTile(new Vector3Int(i, j), blockadeTile);
                 //if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(i, j))) == sidewalkTile | houseTile)
                 //    collisionMap.SetTile(new Vector3Int(i, j), houseTile);
             }
@@ -97,11 +96,6 @@ public class RoadGeneration : MonoBehaviour
                 {
                     roadMap.SetTile(tilePosition + new Vector3Int(j, 0), tile);
                 }
-                else
-                {
-                    CheckAroundTile(tilePosition);
-                }
-                
             }
             tilePosition += new Vector3Int(0, 1);
         }
