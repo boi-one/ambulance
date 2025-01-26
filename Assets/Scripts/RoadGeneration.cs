@@ -2,6 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+struct BuildingTiles
+{
+    public Tile up;
+    public Tile down; 
+    public Tile left; 
+    public Tile right;
+}
+
 public class RoadGeneration : MonoBehaviour
 {
     public Tile roadTile;
@@ -10,14 +18,22 @@ public class RoadGeneration : MonoBehaviour
     public Tile houseTile;
     public Tilemap roadMap;
     public Tilemap collisionMap;
+    public RuleTile ruleHouseTile;
     public int streetAmount = 12;
     public int streetLength = 120;
     private Quaternion rotation = Quaternion.Euler(90, 90, 0);
     private List<Tile> allTiles = new List<Tile>();
 
+    public Tile buildingUp;
+    public Tile buildingDown;
+    public Tile buildingLeft;
+    public Tile buildingRight;
+
     // Start is called before the first frame update
     void Start()
     {
+        ruleHouseTile = new RuleTile(buildingUp, buildingDown, buildingLeft, buildingRight, collisionMap);
+
 
         int stepSize = streetLength / streetAmount;
         for (int i = 0; i < streetAmount; i++) //horizontal
@@ -40,9 +56,8 @@ public class RoadGeneration : MonoBehaviour
         }
         for(int x = 0; x < streetLength; x++)
         {
-            for(int y = 0; y < streetLength; y++)
-                if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(x, y))) == sidewalkTile)
-                    CheckAroundTile1(new Vector3Int(x, y), houseTile);
+            for (int y = 0; y < streetLength; y++)
+                ruleHouseTile.SetTile(new Vector3Int(x, y), sidewalkTile);
         }
     }
 
