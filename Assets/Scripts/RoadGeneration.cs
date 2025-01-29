@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 struct BuildingTiles
 {
     public Tile up;
-    public Tile down; 
-    public Tile left; 
+    public Tile down;
+    public Tile left;
     public Tile right;
 }
 
@@ -28,11 +29,15 @@ public class RoadGeneration : MonoBehaviour
     public Tile buildingDown;
     public Tile buildingLeft;
     public Tile buildingRight;
+    public Tile cornerTopLeft;
+    public Tile cornerTopRight;
+    public Tile cornerLeft;
+    public Tile cornerRight;
 
     // Start is called before the first frame update
     void Start()
     {
-        ruleHouseTile = new RuleTile(buildingUp, buildingDown, buildingLeft, buildingRight, collisionMap);
+        ruleHouseTile = new RuleTile(buildingUp, buildingDown, buildingLeft, buildingRight, cornerLeft, cornerRight, cornerTopRight, cornerTopLeft, roadMap, collisionMap);
 
 
         int stepSize = streetLength / streetAmount;
@@ -46,19 +51,29 @@ public class RoadGeneration : MonoBehaviour
             CreateRoadVertical(new Vector3Int(i * stepSize, 0), new Vector3Int(6, streetLength));
         }
 
-        for(int x = 0; x < streetLength; x++)
+        for (int x = 0; x < streetLength; x++)
         {
-            for(int y = 0; y < streetLength; y++)
+            for (int y = 0; y < streetLength; y++)
             {
                 if (roadMap.GetTile(roadMap.WorldToCell(new Vector3Int(x, y))) == roadTile)
                     CheckAroundTile3(new Vector3Int(x, y), blockadeTile);
             }
         }
-        for(int x = 0; x < streetLength; x++)
+        for (int x = -1; x < streetLength+1; x++)
         {
-            for (int y = 0; y < streetLength; y++)
+            for (int y = -1; y < streetLength+1; y++)
+            {
                 ruleHouseTile.SetTile(new Vector3Int(x, y), sidewalkTile);
+            }
         }
+        for (int x = -1; x < streetLength + 1; x++)
+        {
+            for (int y = -1; y < streetLength + 1; y++)
+            {
+                ruleHouseTile.SetCornerTile(new Vector3Int(x, y), sidewalkTile);
+            }
+        }
+
     }
 
     // Update is called once per frame

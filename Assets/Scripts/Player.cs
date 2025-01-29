@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public Ambulance ambulance;
+    private Vector3 scale = new Vector3(0.5f, 0.5f, 1);
     private float speed = 5f;
     private Vector3 direction;
     private float ambulanceDistance = 0f;
@@ -55,7 +56,7 @@ public class Player : MonoBehaviour
             transform.position = ambulance.transform.position;
         }
         else
-            transform.localScale = new Vector3(1, 1, 1);
+            transform.localScale = scale;
     }
 
     void Movement()
