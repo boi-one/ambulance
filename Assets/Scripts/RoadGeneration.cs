@@ -66,13 +66,14 @@ public class RoadGeneration : MonoBehaviour
                 ruleHouseTile.SetTile(new Vector3Int(x, y), sidewalkTile);
             }
         }
-        for (int x = -1; x < streetLength + 1; x++)
-        {
-            for (int y = -1; y < streetLength + 1; y++)
-            {
-                ruleHouseTile.SetCornerTile(new Vector3Int(x, y), sidewalkTile);
-            }
-        }
+        // TODO: low priority fix when game has actual gameplay
+        //for (int x = -1; x < streetLength + 1; x++)
+        //{
+        //    for (int y = -1; y < streetLength + 1; y++)
+        //    {
+        //        ruleHouseTile.SetCornerTile(new Vector3Int(x, y), sidewalkTile);
+        //    }
+        //}
 
     }
 
