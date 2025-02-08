@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public Ambulance ambulance;
-    private Vector3 scale = new Vector3(0.5f, 0.5f, 1);
+    public Vector3 scale = new Vector3(0.5f, 0.5f, 1);
     private float speed = 5f;
     private Vector3 direction;
     private float ambulanceDistance = 0f;
@@ -41,14 +41,14 @@ public class Player : MonoBehaviour
         else
             Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
 
-        if (Input.GetKeyDown(KeyCode.E) && ambulanceDistance < 3f && !ambulance.entered)
+        if (Input.GetKeyDown(KeyCode.E) && ambulanceDistance < 1.2f && !ambulance.entered)
         {
             ambulance.entered = true;
         }
         else if (Input.GetKeyDown(KeyCode.E) && ambulance.entered)
         {
             ambulance.entered = false;
-            transform.position = ambulance.transform.position + -ambulance.transform.right * 2;
+            transform.position = ambulance.transform.position + -ambulance.transform.right;
         }
         if (ambulance.entered)
         {
@@ -61,6 +61,8 @@ public class Player : MonoBehaviour
 
     void Movement()
     {
+        if (!Input.anyKey) rb.velocity = Vector3.zero;
+
         foreach(KeyValuePair<KeyCode, Vector3> pair in directions)
         {
             if (Input.GetKeyDown(pair.Key)) direction += pair.Value;
