@@ -38,7 +38,6 @@ public class Ambulance : MonoBehaviour
     public bool entered;
 
     Engine engine = new Engine();
-    public Transform[] wheels;
     private float targetAngle = 0f;
     private float rotationSpeed = 0f;
     Rigidbody2D rb;
