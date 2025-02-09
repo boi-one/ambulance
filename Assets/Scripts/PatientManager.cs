@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Timer
 {
@@ -29,7 +30,7 @@ public class PatientManager : MonoBehaviour
     public List<GameObject> allPatients = new List<GameObject>();
     float maxSpawnRange = 0;
     public Player player;
-    public Transform patientDirection;
+    public Image directionArrow;
     
     // Start is called before the first frame update
     void Start()
@@ -57,23 +58,20 @@ public class PatientManager : MonoBehaviour
             }
             while(roadGen.roadMap.GetTile(new Vector3Int((int)spawnPosition.x, (int)spawnPosition.y)) != (roadGen.roadTile | roadGen.sidewalkTile));
             newestPatient.transform.position = spawnPosition;
-
-            Debug.Log(allPatients.Count);
+            newestPatient.GetComponent<Patient>().manager = this;
         }
     }
 
     private void ParentDirectionArrow()
     {
-        if (allPatients.Count < 1) patientDirection.localScale = Vector3.zero;
-        else patientDirection.localScale = Vector3.one;
-
-        patientDirection.position = player.gameObject.transform.position + new Vector3(0, 2, 0);
+        if (allPatients.Count < 1) directionArrow.transform.localScale = Vector3.zero;
+        else directionArrow.transform.localScale = Vector3.one;
     }
 
     private void FirstPatientDirection()
     {
         if (allPatients.Count < 1) return;
         float angle = Mathf.Atan2(allPatients[0].transform.position.y - player.gameObject.transform.position.y, allPatients[0].transform.position.x - player.gameObject.transform.position.x) * Mathf.Rad2Deg;
-        patientDirection.transform.rotation = Quaternion.Euler(0, 0, angle);
+        directionArrow.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 }
