@@ -1237,7 +1237,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ambulance: {fileID: 518571792}
   scale: {x: 0.8, y: 0.8, z: 1}
-  carying: 0
+  carrying: 0
+  parked: 0
 --- !u!50 &1948932786
 Rigidbody2D:
   serializedVersion: 4
@@ -1444,7 +1445,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdcec66fcf6050b49ba2fbb108b57c06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 1948932784}
+  direction: {fileID: 78743610}
+  dropPatient: {fileID: 21300000, guid: 708eff36eb7d5314ba6a24a976b46819, type: 3}
+  originalDirection: {fileID: 21300000, guid: ff7fc05b9c606cf4e9b4c136c9a7e17c, type: 3}
 --- !u!61 &2101543701
 BoxCollider2D:
   m_ObjectHideFlags: 0

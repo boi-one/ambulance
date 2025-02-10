@@ -20,6 +20,8 @@ public class Patient : MonoBehaviour
         if(distance < 1 && Input.GetKeyDown(KeyCode.E))
         {
             transform.parent = manager.player.gameObject.transform.GetChild(0);
+            transform.position = transform.parent.transform.position + (player.gameObject.transform.right * 0.5f);
+            transform.rotation = Quaternion.Euler(0, 0, 180);
             manager.allPatients.Remove(gameObject);
         }
     }

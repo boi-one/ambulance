@@ -25,14 +25,13 @@ public class Timer
 
 public class PatientManager : MonoBehaviour
 {
-    static PatientManager reference;
     public GameObject patientPrefab;
     Timer patientTimer;
     public List<GameObject> allPatients = new List<GameObject>();
     float maxSpawnRange = 0;
     public Player player;
     public Image directionArrow;
-    
+
     void Start()
     {
         patientTimer = new Timer(10);
@@ -56,7 +55,7 @@ public class PatientManager : MonoBehaviour
             {
                 spawnPosition = new Vector3(Random.Range(0, maxSpawnRange), Random.Range(0, maxSpawnRange), 0);
             }
-            while(roadGen.roadMap.GetTile(new Vector3Int((int)spawnPosition.x, (int)spawnPosition.y)) != (roadGen.roadTile | roadGen.sidewalkTile));
+            while (roadGen.roadMap.GetTile(new Vector3Int((int)spawnPosition.x, (int)spawnPosition.y)) != (roadGen.roadTile | roadGen.sidewalkTile));
             newestPatient.transform.position = spawnPosition;
             newestPatient.GetComponent<Patient>().manager = this;
         }
@@ -70,8 +69,19 @@ public class PatientManager : MonoBehaviour
 
     private void FirstPatientDirection()
     {
-        if (allPatients.Count < 1) return;
-        float angle = Mathf.Atan2(allPatients[0].transform.position.y - player.gameObject.transform.position.y, allPatients[0].transform.position.x - player.gameObject.transform.position.x) * Mathf.Rad2Deg;
+        if (allPatients.Count < 1 || player.parked) return;
+        Vector3 target = new Vector3(0, 0);
+        if (player.carrying)
+        {
+            target = new Vector3(16, 18);
+            directionArrow.color = new Color(1, 0.1f, 0.1f);
+        }
+        else
+        {
+            target = allPatients[0].transform.position;
+            directionArrow.color = Color.white;
+        }
+        float angle = Mathf.Atan2(target.y - player.gameObject.transform.position.y, target.x - player.gameObject.transform.position.x) * Mathf.Rad2Deg;
         directionArrow.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 }

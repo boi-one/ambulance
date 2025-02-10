@@ -10,7 +10,8 @@ public class Player : MonoBehaviour
     private Vector3 direction;
     private float ambulanceDistance = 0f;
     private Rigidbody2D rb;
-    public bool carying = false;
+    public bool carrying = false;
+    public bool parked = false;
     Dictionary<KeyCode, Vector3> directions = new Dictionary<KeyCode, Vector3>()
     {
         {KeyCode.W, new Vector3( 0,  1) },
