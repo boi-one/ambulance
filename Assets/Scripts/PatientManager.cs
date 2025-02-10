@@ -25,6 +25,7 @@ public class Timer
 
 public class PatientManager : MonoBehaviour
 {
+    static PatientManager reference;
     public GameObject patientPrefab;
     Timer patientTimer;
     public List<GameObject> allPatients = new List<GameObject>();
@@ -32,7 +33,6 @@ public class PatientManager : MonoBehaviour
     public Player player;
     public Image directionArrow;
     
-    // Start is called before the first frame update
     void Start()
     {
         patientTimer = new Timer(10);

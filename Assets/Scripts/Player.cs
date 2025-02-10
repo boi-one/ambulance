@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     private Vector3 direction;
     private float ambulanceDistance = 0f;
     private Rigidbody2D rb;
+    public bool carying = false;
     Dictionary<KeyCode, Vector3> directions = new Dictionary<KeyCode, Vector3>()
     {
         {KeyCode.W, new Vector3( 0,  1) },
@@ -49,6 +50,10 @@ public class Player : MonoBehaviour
         {
             ambulance.entered = false;
             transform.position = ambulance.transform.position + -ambulance.transform.right;
+        }
+        else if(Input.GetKeyDown(KeyCode.E))
+        {
+
         }
         if (ambulance.entered)
         {

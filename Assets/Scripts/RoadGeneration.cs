@@ -17,6 +17,7 @@ public class RoadGeneration : MonoBehaviour
     public Tile sidewalkTile;
     public Tile blockadeTile;
     public Tile houseTile;
+    public Tile grass;
     public Tilemap roadMap;
     public Tilemap collisionMap;
     public RuleTile ruleHouseTile;
@@ -66,14 +67,19 @@ public class RoadGeneration : MonoBehaviour
                 ruleHouseTile.SetTile(new Vector3Int(x, y), sidewalkTile);
             }
         }
-        // TODO: low priority fix when game has actual gameplay
-        //for (int x = -1; x < streetLength + 1; x++)
-        //{
-        //    for (int y = -1; y < streetLength + 1; y++)
-        //    {
-        //        ruleHouseTile.SetCornerTile(new Vector3Int(x, y), sidewalkTile);
-        //    }
-        //}
+        
+        for(int x = 7; x < 7 + 18; x++)
+        {
+            for(int y = 7; y < 7 + 18; y++)
+            {
+                collisionMap.SetTile(new Vector3Int(x, y), null);
+                if(y > 10)
+                {
+                    roadMap.SetTile(new Vector3Int(x, y), grass); 
+                }
+                else roadMap.SetTile(new Vector3Int(x, y), roadTile);
+            }
+        }
 
     }
 

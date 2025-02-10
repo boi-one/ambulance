@@ -19,7 +19,7 @@ public class Patient : MonoBehaviour
         float distance = (player.transform.position - transform.position).magnitude;
         if(distance < 1 && Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("saved");
+            transform.parent = manager.player.gameObject.transform.GetChild(0);
             manager.allPatients.Remove(gameObject);
         }
     }

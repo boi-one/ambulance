@@ -15,7 +15,7 @@ public class Engine
         float decreaseSteps = increaseSteps * 1.5f;
         if (brake) decreaseSteps = increaseSteps * 3f;
 
-        if(!entered)
+        if (!entered)
         {
             if (velocity > 0) velocity -= decreaseSteps * (1.5f * Time.deltaTime);
             else if (velocity < 0) velocity += decreaseSteps * (1.5f * Time.deltaTime);
@@ -95,7 +95,12 @@ public class Ambulance : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.TryGetComponent<Hospital>(out Hospital hospital)) engine.velocity = 0;
+
         if (!collision.gameObject.TryGetComponent<TilemapCollider2D>(out TilemapCollider2D tilemap)) return;
+
+        Debug.Log("Collide");
+        
         engine.velocity = 0;
     }
 }
