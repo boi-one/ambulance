@@ -31,7 +31,6 @@ public class Hospital : MonoBehaviour
             player.carrying = false;
             Destroy(player.transform.GetChild(0).transform.GetChild(0).gameObject);
             //TODO: fix arrow so it points to the hospital
-            //when at the hospital parking change arrow to '!'
             //make a timer when picking up a patient
             //carry only 1 person at a time
         }

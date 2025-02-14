@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,9 +10,10 @@ public class Patient : MonoBehaviour
     public UITimer timer;
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         player = manager.player;
+        timer = transform.GetChild(0).transform.GetChild(0).GetComponent<UITimer>();
     }
 
     // Update is called once per frame
@@ -26,5 +28,9 @@ public class Patient : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 0, 180);
             manager.allPatients.Remove(gameObject);
         }
+
+        if (!Input.GetKey(KeyCode.E) && !saved) timer.DecreaseTimer();
+        else if (Input.GetKey(KeyCode.E) && saved) timer.IncreaseTimer(); //TODO: continue working on this
+        
     }
 }

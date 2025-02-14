@@ -98,8 +98,6 @@ public class Ambulance : MonoBehaviour
         if (collision.gameObject.TryGetComponent<Hospital>(out Hospital hospital)) engine.velocity = 0;
 
         if (!collision.gameObject.TryGetComponent<TilemapCollider2D>(out TilemapCollider2D tilemap)) return;
-
-        Debug.Log("Collide");
         
         engine.velocity = 0;
     }
