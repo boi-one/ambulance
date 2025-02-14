@@ -17,7 +17,6 @@ public class Hospital : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         player.parked = true;
-        player.carrying = false;
         direction.sprite = dropPatient;
         direction.transform.rotation = Quaternion.identity;
     }
@@ -29,6 +28,8 @@ public class Hospital : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) && player.carrying)
         {
             Debug.Log("Delivered");
+            player.carrying = false;
+            Destroy(player.transform.GetChild(0).transform.GetChild(0).gameObject);
             //TODO: fix arrow so it points to the hospital
             //when at the hospital parking change arrow to '!'
             //make a timer when picking up a patient

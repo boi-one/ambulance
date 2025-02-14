@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Timer
+public class InternalTimer
 {
     public float cooldown;
     private float time;
-    public Timer(float cooldown)
+    public InternalTimer(float cooldown)
     {
         this.cooldown = cooldown;
     }
@@ -26,7 +26,7 @@ public class Timer
 public class PatientManager : MonoBehaviour
 {
     public GameObject patientPrefab;
-    Timer patientTimer;
+    InternalTimer patientTimer;
     public List<GameObject> allPatients = new List<GameObject>();
     float maxSpawnRange = 0;
     public Player player;
@@ -34,7 +34,7 @@ public class PatientManager : MonoBehaviour
 
     void Start()
     {
-        patientTimer = new Timer(10);
+        patientTimer = new InternalTimer(10);
         maxSpawnRange = GetComponent<RoadGeneration>().streetLength;
     }
 
@@ -81,7 +81,13 @@ public class PatientManager : MonoBehaviour
             target = allPatients[0].transform.position;
             directionArrow.color = Color.white;
         }
-        float angle = Mathf.Atan2(target.y - player.gameObject.transform.position.y, target.x - player.gameObject.transform.position.x) * Mathf.Rad2Deg;
+
+        Vector3 playerPosition;
+
+        if (player.ambulance.entered) playerPosition = player.ambulance.transform.position;
+        else playerPosition = player.transform.position;
+
+        float angle = Mathf.Atan2(target.y - playerPosition.y, target.x - playerPosition.x) * Mathf.Rad2Deg;
         directionArrow.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 }
