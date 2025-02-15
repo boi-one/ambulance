@@ -51,6 +51,7 @@ public class PatientManager : MonoBehaviour
 
             allPatients.Add(Instantiate(patientPrefab));
             GameObject newestPatient = allPatients[allPatients.Count - 1];
+            newestPatient.GetComponent<Patient>().manager = this;
             do
             {
                 spawnPosition = new Vector3(Random.Range(0, maxSpawnRange), Random.Range(0, maxSpawnRange), 0);

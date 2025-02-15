@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     public bool carrying = false;
     public bool parked = false;
+    public int patientsSaved = 0;
     Dictionary<KeyCode, Vector3> directions = new Dictionary<KeyCode, Vector3>()
     {
         {KeyCode.W, new Vector3( 0,  1) },
