@@ -34,7 +34,7 @@ public class PatientManager : MonoBehaviour
 
     void Start()
     {
-        patientTimer = new InternalTimer(10);
+        patientTimer = new InternalTimer(30);
         maxSpawnRange = GetComponent<RoadGeneration>().streetLength;
     }
 

@@ -21,9 +21,14 @@ public class Hospital : MonoBehaviour
     [SerializeField]
     TMP_Text patientCounter;
 
+    private void Awake()
+    {
+        dropNotification.gameObject.SetActive(false);
+    }
+
     void Update()
     {
-        dropNotification.text = $"People saved: {patients}";
+        patientCounter.text = $"People saved: {patients}";
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -54,6 +59,6 @@ public class Hospital : MonoBehaviour
     {
         player.parked = false;
         direction.sprite = originalDirection;
-        dropNotification.gameObject.SetActive(true);
+        dropNotification.gameObject.SetActive(false);
     }
 }

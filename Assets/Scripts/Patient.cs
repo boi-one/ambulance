@@ -9,12 +9,13 @@ public class Patient : MonoBehaviour
     bool saved = false;
     bool alive = true;
     public UITimer timer;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         player = manager.player;
         timer = transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<UITimer>();
+        timer.speed = 0.5f;
     }
 
     // Update is called once per frame
@@ -23,22 +24,21 @@ public class Patient : MonoBehaviour
         if (!alive) return;
 
         float distance = (player.transform.position - transform.position).magnitude;
-        if(distance < 1 && Input.GetKeyDown(KeyCode.E) && !player.carrying)
-        {
-            player.carrying = true;
-            transform.SetParent(manager.player.gameObject.transform.GetChild(0));
-            transform.position = transform.parent.transform.position + (player.gameObject.transform.right * 0.5f);
-            transform.rotation = Quaternion.Euler(0, 0, 180);
-            manager.allPatients.Remove(gameObject);
-        }
-
         if (!Input.GetKey(KeyCode.E) && !saved) timer.DecreaseTimer();
-        else if (Input.GetKey(KeyCode.E)) timer.IncreaseTimer(); //TODO: continue working on this
-
-        if (timer.percentage >= 1) saved = true;
-        if(saved)
+        if (distance < 1 && !player.carrying)
         {
-            transform.GetChild(0).transform.GetChild(0).gameObject.SetActive(false);
+            if (Input.GetKey(KeyCode.E)) timer.IncreaseTimer(); //TODO: continue working on this
+
+            if (timer.percentage >= 1) saved = true;
+            if (saved)
+            {
+                transform.GetChild(0).transform.GetChild(0).gameObject.SetActive(false);
+                player.carrying = true;
+                transform.SetParent(manager.player.gameObject.transform.GetChild(0));
+                transform.position = transform.parent.transform.position + (player.gameObject.transform.right * 0.5f);
+                transform.rotation = Quaternion.Euler(0, 0, 180);
+                manager.allPatients.Remove(gameObject);
+            }
         }
 
         if (timer.percentage < 0)

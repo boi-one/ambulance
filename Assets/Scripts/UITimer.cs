@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class UITimer : MonoBehaviour
 {
     Image timerBar;
+    public float speed;
     public float percentage
     {
         get
@@ -25,11 +26,11 @@ public class UITimer : MonoBehaviour
 
     public void DecreaseTimer()
     {
-        if (_percentage > 0) _percentage -= 0.01f * Time.deltaTime;
+        if (_percentage > 0) _percentage -= 0.1f * speed * Time.deltaTime;
     }
 
     public void IncreaseTimer()
     {
-        if (_percentage < 1) _percentage += 0.01f * Time.deltaTime;
+        if (_percentage < 1) _percentage += 0.1f * speed * Time.deltaTime;
     }
 }
