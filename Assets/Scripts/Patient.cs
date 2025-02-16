@@ -15,7 +15,7 @@ public class Patient : MonoBehaviour
     {
         player = manager.player;
         timer = transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<UITimer>();
-        timer.speed = 0.5f;
+        timer.speed = 0.2f;
     }
 
     // Update is called once per frame
@@ -38,6 +38,7 @@ public class Patient : MonoBehaviour
                 transform.position = transform.parent.transform.position + (player.gameObject.transform.right * 0.5f);
                 transform.rotation = Quaternion.Euler(0, 0, 180);
                 manager.allPatients.Remove(gameObject);
+                manager.SpawnPatient();
             }
         }
 
@@ -45,6 +46,8 @@ public class Patient : MonoBehaviour
         {
             alive = false;
             manager.allPatients.Remove(gameObject);
+            manager.patientsDied++;
+            manager.SpawnPatient();
         }
     }
 }

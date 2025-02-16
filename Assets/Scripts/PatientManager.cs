@@ -31,11 +31,13 @@ public class PatientManager : MonoBehaviour
     float maxSpawnRange = 0;
     public Player player;
     public Image directionArrow;
+    public int patientsDied = 0;
 
     void Start()
     {
         patientTimer = new InternalTimer(30);
         maxSpawnRange = GetComponent<RoadGeneration>().streetLength;
+        SpawnPatient(); //TODO: make system where slowly more patients spawn 
     }
 
     // Update is called once per frame
@@ -43,23 +45,23 @@ public class PatientManager : MonoBehaviour
     {
         ParentDirectionArrow();
         FirstPatientDirection();
+    }
 
-        if (patientTimer.Update())
+    public void SpawnPatient()
+    {
+        RoadGeneration roadGen = GetComponent<RoadGeneration>();
+        Vector3 spawnPosition = new Vector3(0, 0, 0);
+
+        allPatients.Add(Instantiate(patientPrefab));
+        GameObject newestPatient = allPatients[allPatients.Count - 1];
+        newestPatient.GetComponent<Patient>().manager = this;
+        do
         {
-            RoadGeneration roadGen = GetComponent<RoadGeneration>();
-            Vector3 spawnPosition = new Vector3(0, 0, 0);
-
-            allPatients.Add(Instantiate(patientPrefab));
-            GameObject newestPatient = allPatients[allPatients.Count - 1];
-            newestPatient.GetComponent<Patient>().manager = this;
-            do
-            {
-                spawnPosition = new Vector3(Random.Range(0, maxSpawnRange), Random.Range(0, maxSpawnRange), 0);
-            }
-            while (roadGen.roadMap.GetTile(new Vector3Int((int)spawnPosition.x, (int)spawnPosition.y)) != (roadGen.roadTile | roadGen.sidewalkTile));
-            newestPatient.transform.position = spawnPosition;
-            newestPatient.GetComponent<Patient>().manager = this;
+            spawnPosition = new Vector3(Random.Range(0, maxSpawnRange), Random.Range(0, maxSpawnRange), 0);
         }
+        while (roadGen.roadMap.GetTile(new Vector3Int((int)spawnPosition.x, (int)spawnPosition.y)) != (roadGen.roadTile | roadGen.sidewalkTile));
+        newestPatient.transform.position = spawnPosition;
+        newestPatient.GetComponent<Patient>().manager = this;
     }
 
     private void ParentDirectionArrow()

@@ -31,6 +31,6 @@ public class UITimer : MonoBehaviour
 
     public void IncreaseTimer()
     {
-        if (_percentage < 1) _percentage += 0.1f * speed * Time.deltaTime;
+        if (_percentage < 1) _percentage += 0.1f * speed * 3 * Time.deltaTime;
     }
 }
